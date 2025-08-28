@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: formally_search_db
+    environment:
+      POSTGRES_USER: formally
+      POSTGRES_PASSWORD: search123
+      POSTGRES_DB: search_db
+    ports:
+      - "25432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U formally"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - formally_network
+
+  backend:
+    build: .
+    container_name: formally_backend
+    environment:
+      DATABASE_URL: postgresql://formally:search123@postgres:5432/search_db
+      API_SECRET: formally_secret_key_2024
+    ports:
+      - "28000:8000"
+    volumes:
+      - ./data:/app/data
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - formally_network
+
+volumes:
+  postgres_data:
+
+networks:
+  formally_network:
