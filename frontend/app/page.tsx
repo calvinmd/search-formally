@@ -67,15 +67,6 @@ export default function HomePage() {
     }
   }
 
-  const toggleKey = (key: string) => {
-    const newExpanded = new Set(expandedKeys)
-    if (newExpanded.has(key)) {
-      newExpanded.delete(key)
-    } else {
-      newExpanded.add(key)
-    }
-    setExpandedKeys(newExpanded)
-  }
 
   const ResultCard = ({ result, index }: { 
     result: SearchResult | null, 
@@ -87,10 +78,7 @@ export default function HomePage() {
     const uniqueId = `${result.key}_${index}`
 
     return (
-      <div 
-        className="bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-700 hover:border-blue-500 transition-colors cursor-pointer"
-        onClick={() => toggleKey(uniqueId)}
-      >
+      <div className="bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-700 hover:border-blue-500 transition-colors">
         <div className="flex justify-between items-start mb-2">
           <span className="text-xs text-gray-400">Rank #{result.rank}</span>
           <span className={`text-sm font-medium px-2 py-1 rounded ${
